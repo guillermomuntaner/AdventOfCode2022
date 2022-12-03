@@ -43,7 +43,10 @@ fn eval_day<T: Display, E: Display>(
     let timer = Instant::now();
     let input = utils::read_input(day);
     let elapsed = timer.elapsed();
-    println!(" {}· Input {}{}(elapsed: {:.2?}){}", ANSI_BOLD, ANSI_RESET, ANSI_ITALIC, elapsed, ANSI_RESET);
+    println!(
+        " {}· Input {}{}(elapsed: {:.2?}){}",
+        ANSI_BOLD, ANSI_RESET, ANSI_ITALIC, elapsed, ANSI_RESET
+    );
     eval_part(1, &input, part1);
     eval_part(2, &input, part2);
 }

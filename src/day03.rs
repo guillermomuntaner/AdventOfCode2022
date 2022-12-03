@@ -10,7 +10,10 @@ pub fn part1(input: &str) -> Option<usize> {
         .lines()
         .map(|line| {
             let (part1, part2) = line.split_at(line.len() / 2);
-            part1.chars().find(|&char| part2.chars().contains(&char)).unwrap()
+            part1
+                .chars()
+                .find(|&char| part2.chars().contains(&char))
+                .unwrap()
         })
         .map(|char| priority(&char))
         .sum::<usize>()
@@ -21,7 +24,11 @@ pub fn part2(input: &str) -> Option<usize> {
     input
         .lines()
         .tuples::<(_, _, _)>()
-        .map(|(elf1, elf2, elf3)| elf1.chars().find(|&i| elf2.contains(i) && elf3.contains(i)).unwrap())
+        .map(|(elf1, elf2, elf3)| {
+            elf1.chars()
+                .find(|&i| elf2.contains(i) && elf3.contains(i))
+                .unwrap()
+        })
         .map(|char| priority(&char))
         .sum::<usize>()
         .into()
