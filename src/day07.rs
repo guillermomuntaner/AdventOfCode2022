@@ -3,15 +3,23 @@ use std::collections::HashMap;
 
 fn get_directory_sizes(input: &str) -> HashMap<String, usize> {
     let mut dir_sizes: HashMap<String, usize> = HashMap::new();
-    let mut dirs_stack: Vec<&str> = Vec::new();
+    // A ~3x perf optimization implemented here is to store the accumulated size in the stack to
+    // avoid doing a lot of increments on the hash map. This looks a bit uglier, specially because
+    // we need some code to consume leftovers after finishing looping over the input.
+    let mut dirs_stack: Vec<(&str, usize)> = Vec::new();
     for line in input.lines() {
         if line.starts_with('$') {
             if line[2..].starts_with("cd") {
                 let argument = &line[5..];
                 if argument.eq("..") {
-                    dirs_stack.pop();
+                    // Pop the dir from the stack, and store the data in the map.
+                    let path = dirs_stack.iter().map(|(dir, _)| dir).join("");
+                    let (_, size) = dirs_stack.pop().unwrap();
+                    if size != 0 {
+                        *dir_sizes.entry(path).or_insert(0) += size;
+                    }
                 } else {
-                    dirs_stack.push(argument);
+                    dirs_stack.push((argument, 0));
                 }
             }
         } else if !line[..3].eq("dir") {
@@ -21,13 +29,19 @@ fn get_directory_sizes(input: &str) -> HashMap<String, usize> {
                 .unwrap()
                 .parse::<usize>()
                 .unwrap();
-            let mut path = String::new();
-            for &dir in dirs_stack.iter() {
-                path.push_str(dir);
-                *dir_sizes.entry(path.clone()).or_insert(0) += size;
+            for (_, dir_size) in &mut dirs_stack {
+                *dir_size += size;
             }
         }
     }
+
+    // Consume any left data in the dirs stack
+    let mut path = String::new();
+    for (dir, size) in dirs_stack.iter() {
+        path.push_str(dir);
+        *dir_sizes.entry(path.clone()).or_insert(0) += size;
+    }
+
     dir_sizes
 }
 
