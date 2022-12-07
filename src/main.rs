@@ -39,7 +39,7 @@ fn eval_day<T: Display, E: Display>(
     part1: fn(&str) -> Option<T>,
     part2: fn(&str) -> Option<E>,
 ) {
-    println!("{}🎄Day {}🎄{}", ANSI_BOLD, day, ANSI_RESET);
+    println!("{}🎄Day {:0>2}🎄{}", ANSI_BOLD, day, ANSI_RESET);
     let timer = Instant::now();
     let input = utils::read_input(day);
     let elapsed = timer.elapsed();

@@ -87,7 +87,7 @@ fn day_benchmark<T, E>(
     match part1(&input) {
         Some(_) => {
             c.bench_with_input(
-                BenchmarkId::new(format!("Day {:2}, Part 1", day), day),
+                BenchmarkId::new(format!("Day {:0>2}, Part 1", day), day),
                 &input,
                 |b, input| b.iter(|| part1(input)),
             );
@@ -99,7 +99,7 @@ fn day_benchmark<T, E>(
     match part2(&input) {
         Some(_) => {
             c.bench_with_input(
-                BenchmarkId::new(format!("Day {:2}, Part 2", day), day),
+                BenchmarkId::new(format!("Day {:0>2}, Part 2", day), day),
                 &input,
                 |b, input| b.iter(|| part2(input)),
             );
