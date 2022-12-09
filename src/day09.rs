@@ -13,6 +13,7 @@ fn rope_simulator<'a>(
 ) -> usize {
     let mut tail_visited: HashSet<(isize, isize)> = HashSet::new();
     let mut rope = vec![(0_isize, 0_isize); length];
+    tail_visited.insert((0, 0));
     for (instruction, value) in instructions {
         let offset = match instruction {
             "U" => (1, 0),
@@ -21,24 +22,27 @@ fn rope_simulator<'a>(
             "L" => (0, -1),
             _ => panic!("Unexpected instruction {}", instruction),
         };
-        for _ in 0..value {
+        'iter: for _ in 0..value {
             for i in 0..rope.len() {
-                rope[i] = if i == 0 {
-                    (rope[0].0 + offset.0, rope[0].1 + offset.1)
+                if i == 0 {
+                    rope[i] = (rope[0].0 + offset.0, rope[0].1 + offset.1)
                 } else {
                     let (head_y, head_x) = rope[i - 1];
                     let (tail_y, tail_x) = rope[i];
                     if (head_y - tail_y).abs() > 1 || (head_x - tail_x).abs() > 1 {
-                        (
+                        rope[i] = (
                             tail_y + (head_y - tail_y).signum(),
                             tail_x + (head_x - tail_x).signum(),
-                        )
+                        );
+                        if i == rope.len() - 1 {
+                            tail_visited.insert(rope[i]);
+                        }
                     } else {
-                        (tail_y, tail_x)
+                        // Optimization: If a knot doesn't move all subsequent won't either
+                        continue 'iter;
                     }
                 }
             }
-            tail_visited.insert(*rope.last().unwrap());
         }
     }
     tail_visited.len()
