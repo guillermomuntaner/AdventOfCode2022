@@ -1,6 +1,62 @@
 use aoc2022::*;
-use criterion::{black_box, criterion_group, criterion_main, BenchmarkId, Criterion};
+use criterion::{criterion_group, criterion_main, Criterion};
 
+fn all_days(c: &mut Criterion) {
+    c.bench_function("All days", |b| {
+        b.iter(|| {
+            day01::part1(&utils::read_input(1));
+            day01::part2(&utils::read_input(1));
+            day02::part1(&utils::read_input(2));
+            day02::part2(&utils::read_input(2));
+            day03::part1(&utils::read_input(3));
+            day03::part2(&utils::read_input(3));
+            day04::part1(&utils::read_input(4));
+            day04::part2(&utils::read_input(4));
+            day05::part1(&utils::read_input(5));
+            day05::part2(&utils::read_input(5));
+            day06::part1(&utils::read_input(6));
+            day06::part2(&utils::read_input(6));
+            day07::part1(&utils::read_input(7));
+            day07::part2(&utils::read_input(7));
+            day08::part1(&utils::read_input(8));
+            day08::part2(&utils::read_input(8));
+            day09::part1(&utils::read_input(9));
+            day09::part2(&utils::read_input(9));
+            day10::part1(&utils::read_input(10));
+            day10::part2(&utils::read_input(10));
+            day11::part1(&utils::read_input(11));
+            day11::part2(&utils::read_input(11));
+            day12::part1(&utils::read_input(12));
+            day12::part2(&utils::read_input(12));
+            day13::part1(&utils::read_input(13));
+            day13::part2(&utils::read_input(13));
+            day14::part1(&utils::read_input(14));
+            day14::part2(&utils::read_input(14));
+            day15::part1(&utils::read_input(15));
+            day15::part2(&utils::read_input(15));
+            day16::part1(&utils::read_input(16));
+            day16::part2(&utils::read_input(16));
+            day17::part1(&utils::read_input(17));
+            day17::part2(&utils::read_input(17));
+            day18::part1(&utils::read_input(18));
+            day18::part2(&utils::read_input(18));
+            day19::part1(&utils::read_input(19));
+            day19::part2(&utils::read_input(19));
+            day20::part1(&utils::read_input(20));
+            day20::part2(&utils::read_input(20));
+            day21::part1(&utils::read_input(21));
+            day21::part2(&utils::read_input(21));
+            day22::part1(&utils::read_input(22));
+            day22::part2(&utils::read_input(22));
+            day23::part1(&utils::read_input(23));
+            day23::part2(&utils::read_input(23));
+            day24::part1(&utils::read_input(24));
+            day24::part2(&utils::read_input(24));
+            day25::part1(&utils::read_input(25));
+            day25::part2(&utils::read_input(25));
+        })
+    });
+}
 fn day01_benchmark(c: &mut Criterion) {
     day_benchmark(c, 1, day01::part1, day01::part2)
 }
@@ -83,26 +139,21 @@ fn day_benchmark<T, E>(
     part1: fn(&str) -> Option<T>,
     part2: fn(&str) -> Option<E>,
 ) {
-    let input = black_box(utils::read_input(day));
-    match part1(&input) {
+    match part1(&utils::read_input(day)) {
         Some(_) => {
-            c.bench_with_input(
-                BenchmarkId::new(format!("Day {:0>2}, Part 1", day), day),
-                &input,
-                |b, input| b.iter(|| part1(input)),
-            );
+            c.bench_function(&format!("Day {:0>2}, Part 1", day), |b| {
+                b.iter(|| part1(&utils::read_input(day)))
+            });
         }
         None => {
             println!("Day {:2}, Part 1 not solved", day)
         }
     }
-    match part2(&input) {
+    match part2(&utils::read_input(day)) {
         Some(_) => {
-            c.bench_with_input(
-                BenchmarkId::new(format!("Day {:0>2}, Part 2", day), day),
-                &input,
-                |b, input| b.iter(|| part2(input)),
-            );
+            c.bench_function(&format!("Day {:0>2}, Part 2", day), |b| {
+                b.iter(|| part2(&utils::read_input(day)))
+            });
         }
         None => {
             println!("Day {:2}, Part 2 not solved", day)
@@ -112,6 +163,7 @@ fn day_benchmark<T, E>(
 
 criterion_group!(
     benchmark,
+    all_days,
     day01_benchmark,
     day02_benchmark,
     day03_benchmark,
