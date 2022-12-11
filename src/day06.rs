@@ -1,5 +1,3 @@
-use std::collections::HashSet;
-
 pub fn start_of_message(input: &str, lenght: usize) -> usize {
     input
         .chars()
@@ -7,11 +5,14 @@ pub fn start_of_message(input: &str, lenght: usize) -> usize {
         .windows(lenght)
         .enumerate()
         .find_map(|(index, window)| {
-            if HashSet::<&char>::from_iter(window).len() == lenght {
-                Some(index + lenght)
-            } else {
-                None
+            for i in 0..window.len() {
+                for j in (i + 1)..window.len() {
+                    if window[i] == window[j] {
+                        return None;
+                    }
+                }
             }
+            Some(index + lenght)
         })
         .unwrap()
 }
