@@ -65,14 +65,14 @@ pub fn calc(input: &str, y: i64) -> Option<usize> {
         .into()
 }
 
-
 pub fn calc2(input: &str, search_range: RangeInclusive<i64>) -> Option<i64> {
     let (_, _, _, report) = parse_input(input);
     report
         .iter()
         // Remove sensors completely contained by others, just to reduce search space
         .filter(|(sensor_a, _, distance_a)| {
-            !report.iter()
+            !report
+                .iter()
                 .filter(|(sensor_b, _, _)| sensor_a != sensor_b)
                 .any(|(sensor_b, _, distance_b)| {
                     distance(sensor_a, sensor_b) + distance_a <= *distance_b
@@ -80,14 +80,16 @@ pub fn calc2(input: &str, search_range: RangeInclusive<i64>) -> Option<i64> {
         })
         // Search only on the outside border of the sensor reach
         .flat_map(|(sensor, _, distance)| {
-            (0..=*distance).flat_map(|i| {
-                vec![
-                    (sensor.0 + i + 1, sensor.1 + distance - i),
-                    (sensor.0 - i - 1, sensor.1 - distance + i),
-                    (sensor.0 + distance - i, sensor.1 + i + 1),
-                    (sensor.0 - distance + i, sensor.1 - i - 1)
-                ]
-            }).collect::<Vec<_>>()
+            (0..=*distance)
+                .flat_map(|i| {
+                    vec![
+                        (sensor.0 + i + 1, sensor.1 + distance - i),
+                        (sensor.0 - i - 1, sensor.1 - distance + i),
+                        (sensor.0 + distance - i, sensor.1 + i + 1),
+                        (sensor.0 - distance + i, sensor.1 - i - 1),
+                    ]
+                })
+                .collect::<Vec<_>>()
         })
         .filter(|(x, y)| search_range.contains(x) && search_range.contains(y))
         .filter(|position| {
@@ -100,9 +102,7 @@ pub fn calc2(input: &str, search_range: RangeInclusive<i64>) -> Option<i64> {
                 .iter()
                 .all(|(sensor, _, reach)| distance(sensor, position) > *reach)
         })
-        .map(|(x, y)| {
-            x * 4000000 + y
-        })
+        .map(|(x, y)| x * 4000000 + y)
         .next()
         .unwrap()
         .into()
